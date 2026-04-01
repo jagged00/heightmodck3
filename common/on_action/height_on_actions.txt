@@ -1,0 +1,29 @@
+on_birth_child = {
+	effect = {
+		scope:child = {
+			assign_birth_height_trait_effect = yes
+		}
+	}
+}
+
+# Covers ruler designer / generated characters.
+on_character_created = {
+	effect = {
+		maintain_height_trait_effect = yes
+	}
+}
+
+# Backfills save-start / bookmark-start living characters.
+on_game_start = {
+	effect = {
+		every_living_character = {
+			maintain_height_trait_effect = yes
+		}
+	}
+}
+
+on_yearly_pulse = {
+	effect = {
+		maintain_height_trait_effect = yes
+	}
+}

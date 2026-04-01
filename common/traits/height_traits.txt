@@ -1,0 +1,134 @@
+# Height trait ladder intended for compatibility with existing mods.
+# Giant and dwarf hard-override these values through scripted effects.
+
+average_height = {
+	index = 1
+	physical = yes
+	genetic = yes
+	inherit_chance = 100
+	opposites = { short_1 short_2 short_3 short_4 short_5 tall_1 tall_2 tall_3 tall_4 tall_5 }
+
+dna_modifiers = {
+		gene_bs_height = 0.0
+	}
+}
+
+short = {
+	index = 2
+	hidden = yes
+}
+
+short_1 = {
+	index = 3
+	physical = yes
+	genetic = yes
+	opposites = { average_height tall_1 tall_2 tall_3 tall_4 tall_5 }
+
+dna_modifiers = {
+		gene_bs_height = -0.05
+	}
+}
+
+short_2 = {
+	index = 4
+	physical = yes
+	genetic = yes
+	opposites = { average_height tall_1 tall_2 tall_3 tall_4 tall_5 }
+
+dna_modifiers = {
+		gene_bs_height = -0.10
+	}
+}
+
+short_3 = {
+	index = 5
+	physical = yes
+	genetic = yes
+	opposites = { average_height tall_1 tall_2 tall_3 tall_4 tall_5 }
+
+dna_modifiers = {
+		gene_bs_height = -0.15
+	}
+}
+
+short_4 = {
+	index = 6
+	physical = yes
+	genetic = yes
+	opposites = { average_height tall_1 tall_2 tall_3 tall_4 tall_5 }
+
+dna_modifiers = {
+		gene_bs_height = -0.18
+	}
+}
+
+short_5 = {
+	index = 7
+	physical = yes
+	genetic = yes
+	opposites = { average_height tall_1 tall_2 tall_3 tall_4 tall_5 }
+
+dna_modifiers = {
+		gene_bs_height = -0.20
+	}
+}
+
+tall = {
+	index = 8
+	hidden = yes
+}
+
+tall_1 = {
+	index = 9
+	physical = yes
+	genetic = yes
+	opposites = { average_height short_1 short_2 short_3 short_4 short_5 }
+
+dna_modifiers = {
+		gene_bs_height = 0.05
+	}
+}
+
+tall_2 = {
+	index = 10
+	physical = yes
+	genetic = yes
+	opposites = { average_height short_1 short_2 short_3 short_4 short_5 }
+
+dna_modifiers = {
+		gene_bs_height = 0.10
+	}
+}
+
+tall_3 = {
+	index = 11
+	physical = yes
+	genetic = yes
+	opposites = { average_height short_1 short_2 short_3 short_4 short_5 }
+
+dna_modifiers = {
+		gene_bs_height = 0.15
+	}
+}
+
+tall_4 = {
+	index = 12
+	physical = yes
+	genetic = yes
+	opposites = { average_height short_1 short_2 short_3 short_4 short_5 }
+
+dna_modifiers = {
+		gene_bs_height = 0.18
+	}
+}
+
+tall_5 = {
+	index = 13
+	physical = yes
+	genetic = yes
+	opposites = { average_height short_1 short_2 short_3 short_4 short_5 }
+
+dna_modifiers = {
+		gene_bs_height = 0.25
+	}
+}
