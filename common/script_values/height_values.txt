@@ -1,0 +1,23 @@
+actual_height = {
+	value = 170
+	if = { limit = { is_female = yes } add = -10 }
+
+	if = { limit = { has_trait = short_1 } add = -5 }
+	if = { limit = { has_trait = short_2 } add = -10 }
+	if = { limit = { has_trait = short_3 } add = -15 }
+	if = { limit = { has_trait = short_4 } add = -20 }
+	if = { limit = { has_trait = short_5 } add = -25 }
+	if = { limit = { has_trait = tall_1 } add = 5 }
+	if = { limit = { has_trait = tall_2 } add = 10 }
+	if = { limit = { has_trait = tall_3 } add = 15 }
+	if = { limit = { has_trait = tall_4 } add = 20 }
+	if = { limit = { has_trait = tall_5 } add = 30 }
+
+	# Hard overrides for vanilla special traits.
+	if = { limit = { has_trait = giant } value = 208 }
+	if = { limit = { has_trait = dwarf } value = 135 }
+}
+
+metric_height = {
+	value = actual_height
+}

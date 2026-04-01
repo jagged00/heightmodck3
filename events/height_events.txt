@@ -1,0 +1,11 @@
+namespace = height
+
+character_event = {
+	id = height.0001
+	hide_window = yes
+	is_triggered_only = yes
+
+	immediate = {
+		assign_birth_height_trait_effect = yes
+	}
+}
