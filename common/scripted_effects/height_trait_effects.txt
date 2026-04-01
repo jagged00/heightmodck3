@@ -32,16 +32,153 @@ apply_height_override_effect = {
 	if = {
 		limit = { has_trait = giant }
 		clear_height_traits_effect = yes
-		add_trait = tall_5
+		# Giants still grow up: very tall for age, then full giant at adulthood.
+		if = {
+			limit = { is_adult = yes }
+			add_trait = tall_5
+		}
+		else_if = {
+			limit = { age >= 12 }
+			add_trait = tall_4
+		}
+		else_if = {
+			limit = { age >= 6 }
+			add_trait = tall_3
+		}
+		else = {
+			add_trait = tall_2
+		}
+		remove_character_flag = height_puberty_pending
 	}
 	else_if = {
 		limit = { has_trait = dwarf }
 		clear_height_traits_effect = yes
-		add_trait = short_5
+		# Dwarfs remain consistently small with minimal growth.
+		if = {
+			limit = { is_adult = yes }
+			add_trait = short_5
+		}
+		else = {
+			add_trait = short_4
+		}
+		remove_character_flag = height_puberty_pending
 	}
 }
 
-# Called at birth: inheritance-first with a small mutation chance.
+# Parent-driven roll used for adult/final height outcome.
+roll_genetic_height_effect = {
+	if = {
+		limit = {
+			OR = {
+				mother = { has_trait = tall_5 }
+				real_father = { has_trait = tall_5 }
+			}
+		}
+		random_list = {
+			70 = { add_trait = tall_5 }
+			20 = { add_trait = tall_4 }
+			10 = { add_trait = tall_3 }
+		}
+	}
+	else_if = {
+		limit = {
+			OR = {
+				mother = { has_trait = short_5 }
+				real_father = { has_trait = short_5 }
+			}
+		}
+		random_list = {
+			70 = { add_trait = short_5 }
+			20 = { add_trait = short_4 }
+			10 = { add_trait = short_3 }
+		}
+	}
+	else_if = {
+		limit = {
+			AND = {
+				OR = {
+					mother = { has_trait = tall_1 }
+					mother = { has_trait = tall_2 }
+					mother = { has_trait = tall_3 }
+					mother = { has_trait = tall_4 }
+				}
+				OR = {
+					real_father = { has_trait = tall_1 }
+					real_father = { has_trait = tall_2 }
+					real_father = { has_trait = tall_3 }
+					real_father = { has_trait = tall_4 }
+				}
+			}
+		}
+		random_list = {
+			10 = { add_trait = average_height }
+			25 = { add_trait = tall_1 }
+			30 = { add_trait = tall_2 }
+			25 = { add_trait = tall_3 }
+			10 = { add_trait = tall_4 }
+		}
+	}
+	else_if = {
+		limit = {
+			AND = {
+				OR = {
+					mother = { has_trait = short_1 }
+					mother = { has_trait = short_2 }
+					mother = { has_trait = short_3 }
+					mother = { has_trait = short_4 }
+				}
+				OR = {
+					real_father = { has_trait = short_1 }
+					real_father = { has_trait = short_2 }
+					real_father = { has_trait = short_3 }
+					real_father = { has_trait = short_4 }
+				}
+			}
+		}
+		random_list = {
+			10 = { add_trait = average_height }
+			25 = { add_trait = short_1 }
+			30 = { add_trait = short_2 }
+			25 = { add_trait = short_3 }
+			10 = { add_trait = short_4 }
+		}
+	}
+	else_if = {
+		limit = {
+			OR = {
+				AND = {
+					mother = { has_trait = short_1 }
+					real_father = { has_trait = tall_1 }
+				}
+				AND = {
+					mother = { has_trait = tall_1 }
+					real_father = { has_trait = short_1 }
+				}
+				mother = { has_trait = average_height }
+				real_father = { has_trait = average_height }
+			}
+		}
+		random_list = {
+			20 = { add_trait = short_1 }
+			60 = { add_trait = average_height }
+			20 = { add_trait = tall_1 }
+		}
+	}
+	else = {
+		# Small mutation chance in fallback branch.
+		random_list = {
+			3 = { add_trait = short_5 }
+			7 = { add_trait = short_3 }
+			15 = { add_trait = short_1 }
+			50 = { add_trait = average_height }
+			15 = { add_trait = tall_1 }
+			7 = { add_trait = tall_3 }
+			3 = { add_trait = tall_5 }
+		}
+	}
+}
+
+# Birth handling: children stay visually average until puberty, unless giant/dwarf overrides apply.
 assign_birth_height_trait_effect = {
 	apply_height_override_effect = yes
 
@@ -49,129 +186,41 @@ assign_birth_height_trait_effect = {
 		limit = {
 			NOT = { has_trait = giant }
 			NOT = { has_trait = dwarf }
-			NOT = { has_any_height_trait_trigger = yes }
 		}
-
-		# Dominant tendency: if either parent has extreme tier, child leans that direction.
-		if = {
-			limit = {
-				OR = {
-					mother = { has_trait = tall_5 }
-					real_father = { has_trait = tall_5 }
-				}
-			}
-			random_list = {
-				70 = { add_trait = tall_5 }
-				20 = { add_trait = tall_4 }
-				10 = { add_trait = tall_3 }
-			}
-		}
-		else_if = {
-			limit = {
-				OR = {
-					mother = { has_trait = short_5 }
-					real_father = { has_trait = short_5 }
-				}
-			}
-			random_list = {
-				70 = { add_trait = short_5 }
-				20 = { add_trait = short_4 }
-				10 = { add_trait = short_3 }
-			}
-		}
-		# If both parents are in the same broad family, keep child in that family.
-		else_if = {
-			limit = {
-				AND = {
-					OR = {
-						mother = { has_trait = tall_1 }
-						mother = { has_trait = tall_2 }
-						mother = { has_trait = tall_3 }
-						mother = { has_trait = tall_4 }
-					}
-					OR = {
-						real_father = { has_trait = tall_1 }
-						real_father = { has_trait = tall_2 }
-						real_father = { has_trait = tall_3 }
-						real_father = { has_trait = tall_4 }
-					}
-				}
-			}
-			random_list = {
-				10 = { add_trait = average_height }
-				25 = { add_trait = tall_1 }
-				30 = { add_trait = tall_2 }
-				25 = { add_trait = tall_3 }
-				10 = { add_trait = tall_4 }
-			}
-		}
-		else_if = {
-			limit = {
-				AND = {
-					OR = {
-						mother = { has_trait = short_1 }
-						mother = { has_trait = short_2 }
-						mother = { has_trait = short_3 }
-						mother = { has_trait = short_4 }
-					}
-					OR = {
-						real_father = { has_trait = short_1 }
-						real_father = { has_trait = short_2 }
-						real_father = { has_trait = short_3 }
-						real_father = { has_trait = short_4 }
-					}
-				}
-			}
-			random_list = {
-				10 = { add_trait = average_height }
-				25 = { add_trait = short_1 }
-				30 = { add_trait = short_2 }
-				25 = { add_trait = short_3 }
-				10 = { add_trait = short_4 }
-			}
-		}
-		# Mixed parents trend toward average (polygenic blend approximation).
-		else_if = {
-			limit = {
-				OR = {
-					AND = {
-						mother = { has_trait = short_1 }
-						real_father = { has_trait = tall_1 }
-					}
-					AND = {
-						mother = { has_trait = tall_1 }
-						real_father = { has_trait = short_1 }
-					}
-					mother = { has_trait = average_height }
-					real_father = { has_trait = average_height }
-				}
-			}
-			random_list = {
-				20 = { add_trait = short_1 }
-				60 = { add_trait = average_height }
-				20 = { add_trait = tall_1 }
-			}
-		}
-		else = {
-			# Mutation chance and fallback baseline distribution.
-			random_list = {
-				3 = { add_trait = short_5 }
-				7 = { add_trait = short_3 }
-				15 = { add_trait = short_1 }
-				50 = { add_trait = average_height }
-				15 = { add_trait = tall_1 }
-				7 = { add_trait = tall_3 }
-				3 = { add_trait = tall_5 }
-			}
-		}
+		clear_height_traits_effect = yes
+		add_trait = average_height
+		add_character_flag = height_puberty_pending
 	}
 }
 
-# Re-applies only hard overrides after birth; does not re-roll inherited genetics.
+# Maintains overrides and applies final height at/after puberty.
 maintain_height_trait_effect = {
 	apply_height_override_effect = yes
+
 	if = {
-		limit = { NOT = { has_any_height_trait_trigger = yes } }
-		assign_birth_height_trait_effect = yes
+		limit = {
+			NOT = { has_trait = giant }
+			NOT = { has_trait = dwarf }
+			has_character_flag = height_puberty_pending
+			is_adult = yes
+		}
+		clear_height_traits_effect = yes
+		roll_genetic_height_effect = yes
+		remove_character_flag = height_puberty_pending
+	}
+	else_if = {
+		limit = {
+			NOT = { has_trait = giant }
+			NOT = { has_trait = dwarf }
+			NOT = { has_any_height_trait_trigger = yes }
+		}
+		if = {
+			limit = { is_adult = yes }
+			roll_genetic_height_effect = yes
+		}
+		else = {
+			add_trait = average_height
+			add_character_flag = height_puberty_pending
+		}
 	}
 }
